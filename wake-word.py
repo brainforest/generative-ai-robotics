@@ -2,6 +2,7 @@ import pyaudio
 import speech_recognition as sr
 import pyttsx3
 import random
+import os
 
 # Initialize recognizer and text-to-speech engine
 r = sr.Recognizer()
@@ -43,7 +44,7 @@ def listen_and_respond(source):
             # Process the command here, for now just acknowledge it
             engine.say(f"You said: {text}")
             engine.runAndWait()
-            break
+            # break
         except sr.UnknownValueError:
             print("Sorry, I didn't catch that.")
         except sr.RequestError as e:

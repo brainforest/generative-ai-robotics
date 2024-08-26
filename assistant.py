@@ -39,15 +39,18 @@ TRESHOLD = (RESPEAKER_RATE / CHUNK * SILENCE_DURATION)
 # Initialize PyAudio
 p = pyaudio.PyAudio()
 
-question_headers = ["7 yaşındaki çocuk için eğlenceli bir şekilde ve kısa cevap ver: ",
- "7 yaşındaki çocuk için şakacı ve kısa bir cevap ver : ",
- "7 yaşındaki çocuk için noel baba gibi ve kısa bir cevap ver :",
+question_headers = ["7 yaşındaki çocuk için eğlenceli bir cevap ver: ",
+ "7 yaşındaki çocuk için şakacı bir cevap ver : ",
+ "7 yaşındaki çocuk için noel baba gibi cevap ver :",
  "7 yaşındaki çocuk için öğretmen gibi cevap ver: ",
- "7 yaşındaki çocuk için komik bir öğretmen gibi ve kısa cevap ver: ",
- "7 yaşındaki çocuk için bir astronot gibi ve kısa cevap ver :",
- "7 yaşındaki çocuk için bir çocuk gibi ve kısa cevap ver :",
- "7 yaşındaki çocuk için bir baba gibi ve kısa cevap ver :",
- "7 yaşındaki çocuk için bir bilim adamı gibi ve kısa cevap ver : " ]
+ "7 yaşındaki çocuk için komik bir cevap ver: ",
+ "7 yaşındaki çocuk için bir astronot gibi cevap ver :",
+ "7 yaşındaki çocuk için bir çocuk gibi cevap ver :",
+ "7 yaşındaki çocuk için bir baba gibi cevap ver :",
+ "7 yaşındaki çocuk için bir robot gibi cevap ver :",
+ "7 yaşındaki çocuk için bir yapay zeka gibi cevap ver :",
+ "7 yaşındaki çocuk için bir ciddi bir cevap ver :",
+ "7 yaşındaki çocuk için bir bilim adamı gibi cevap ver : " ]
 
 max_history_length = 100
 # File to store conversation history
