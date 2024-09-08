@@ -6,7 +6,7 @@ client = OpenAI()
 def ask_openai_with_context(question):
     response = client.chat.completions.create(
         model="gpt-4o-mini",
-        temperature=0.8,
+        temperature=0.1,
         messages=[
             {"role": "user", "content": question}
         ]
