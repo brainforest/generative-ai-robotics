@@ -3,6 +3,11 @@ from annoy import AnnoyIndex
 from openai import OpenAI
 client = OpenAI()
 
+# Embedding models that can be used
+# text-embedding-3-small
+# text-embedding-3-large
+# text-embedding-ada-002
+
 # Example documents to store in memory
 documents = [
     "The sun is the star at the center of the solar system.",
@@ -34,7 +39,7 @@ annoy_index.build(10)
 
 # Step 3: Example query
 query = "How long does it take Earth to orbit the sun?"
-query_embedding = client.embeddings.create(model="text-embedding-ada-002", input=query).data[0].embedding
+query_embedding = client.embeddings.create(model="text-embedding-3-small", input=query).data[0].embedding
 query_embedding = np.array(query_embedding).astype('float32')
 
 # Step 4: Search Annoy index for top 2 most similar documents
