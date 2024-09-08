@@ -147,7 +147,7 @@ for i, text in enumerate(texts):
 index.build(10)  # Build index with 10 trees
 
 # Perform a similarity search
-def find_similar(text, k=10):
+def find_similar(text, k=20):
     words = preprocess(text)
     word_vectors = [model.wv[word] for word in words if word in model.wv]
     if word_vectors:
