@@ -5,7 +5,6 @@ import numpy as np
 
 # Sample scientific texts
 texts = [
-    "Genetics is a branch of biology concerned with the study of genes, genetic variation, and heredity in organisms.",
     "The theory of relativity is a scientific theory of the relationship between space and time.",
     "Quantum mechanics is a fundamental theory in physics that provides a description of physical properties at the scale of atoms and subatomic particles.",
     "The standard model of particle physics is a theory concerning the electromagnetic, weak, and strong nuclear forces.",
