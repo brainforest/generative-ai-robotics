@@ -64,8 +64,6 @@ def find_similar(text, model, index, chunks, k=1):
 
 # Main execution
 def main(pdf_path):
-
-    
     client = OpenAI()
 
     # Step 1: Extract text from PDF
@@ -80,32 +78,42 @@ def main(pdf_path):
     # Step 4: Build Annoy index
     annoy_index = build_annoy_index(model, chunks)
 
-    # Step 5: Perform similarity search (Example)
-    question = "what is the benefit of decentralized workflow engines in SAGA ?"
-    query_text = question 
-    nearest_neighbors = find_similar(query_text, model, annoy_index, chunks)
+    # Continuous loop to get questions from user
+    while True:
+        question = input("Ask a question (or type 'exit' to quit): ")
+        if question.lower() == 'exit':
+            print("Exiting the program.")
+            break
 
-    context = ""
-    print("Nearest neighbors (text indices):", nearest_neighbors)
-    for i in nearest_neighbors:
-        # print(f"Text Chunk {i}: {chunks[i]}\n")
-        context += chunks[i] + " "
+        # Perform similarity search based on the user's question
+        query_text = question 
+        nearest_neighbors = find_similar(query_text, model, annoy_index, chunks)
+
+        context = ""
+        for i in nearest_neighbors:
+            context += chunks[i] + " "
+
+        if (len(context) > 10):
+            print("** context constructed! **")
+
+        print("You asked: ", question)
         
-    print("You asked : ", question)
-  
-    prompt = ""
-    if (len(context) > 10) :
-         prompt = f"Based on this context : {context} you are IT Solution Architect and expert in this area. Please, answer this question : {question}"
-    else:
-         prompt = f"you are IT Solution Architect and expert in this area. Please, answer this question : {question}"
+        # Formulate the prompt for OpenAI
+        prompt = ""
+        if len(context) > 10:
+            prompt = f"Based on this context: {context} you are an IT Solution Architect and expert in this area. Please, answer this question: {question}"
+        else:
+            prompt = f"You are an IT Solution Architect and expert in this area. Please, answer this question: {question}"
 
-    completion = client.chat.completions.create(
-    model="gpt-4o-mini",
-    messages=[
-       {"role": "user", "content": prompt}
-    ])
+        # Send the prompt to OpenAI and get a response
+        completion = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[
+               {"role": "user", "content": prompt}
+            ]
+        )
 
-    print("Open AI : " ,completion.choices[0].message.content)
+        print("OpenAI's response: ", completion.choices[0].message.content)
 
 # Example usage
 pdf_file = "sample.pdf"  # Path to your PDF file
