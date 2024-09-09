@@ -81,7 +81,7 @@ def main(pdf_path):
     annoy_index = build_annoy_index(model, chunks)
 
     # Step 5: Perform similarity search (Example)
-    query_text = "decentralized workflow engine"
+    query_text = "models"
     nearest_neighbors = find_similar(query_text, model, annoy_index, chunks)
 
     context = ""
@@ -91,7 +91,7 @@ def main(pdf_path):
         context += chunks[i] + " "
         
 
-    question = "what is the benefit of decentralized workflow engines in SAGA ?"
+    question = "what are the list of models that I can use in OpenAI ? " 
     
     print("You asked : ", question)
     
