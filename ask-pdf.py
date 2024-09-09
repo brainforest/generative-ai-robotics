@@ -81,7 +81,8 @@ def main(pdf_path):
     annoy_index = build_annoy_index(model, chunks)
 
     # Step 5: Perform similarity search (Example)
-    query_text = "models"
+    question = "what is the benefit of decentralized workflow engines in SAGA ?"
+    query_text = question 
     nearest_neighbors = find_similar(query_text, model, annoy_index, chunks)
 
     context = ""
@@ -90,15 +91,18 @@ def main(pdf_path):
         # print(f"Text Chunk {i}: {chunks[i]}\n")
         context += chunks[i] + " "
         
-
-    question = "what are the list of models that I can use in OpenAI ? " 
-    
     print("You asked : ", question)
-    
+  
+    prompt = ""
+    if (len(context) > 10) :
+         prompt = f"Based on this context : {context} you are IT Solution Architect and expert in this area. Please, answer this question : {question}"
+    else:
+         prompt = f"you are IT Solution Architect and expert in this area. Please, answer this question : {question}"
+
     completion = client.chat.completions.create(
     model="gpt-4o-mini",
     messages=[
-       {"role": "user", "content": f"Based on this context : {context} you are IT Solution Architect and expert in this area. Please, answer this question : {question}"}
+       {"role": "user", "content": prompt}
     ])
 
     print("Open AI : " ,completion.choices[0].message.content)
