@@ -40,6 +40,8 @@ def hybrid_search(query, top_n=5):
 
 # Example query
 query = "quantum theory"
+print("You asked : ",query)
 results = hybrid_search(query)
-print("Search Results:", [keyword_index[result] for result in results])
+for result in results:
+  print(keyword_index[result])
 
