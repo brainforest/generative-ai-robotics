@@ -108,10 +108,7 @@ def main(pdf_path):
         # Send the prompt to OpenAI and get a response
         completion = client.chat.completions.create(
             model="gpt-4o-mini",
-            messages=[
-               {"role": "user", "content": prompt}
-            ]
-        )
+            messages=[ {"role": "user", "content": prompt} ])
 
         print("OpenAI's response: ", completion.choices[0].message.content)
 
