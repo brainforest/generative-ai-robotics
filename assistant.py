@@ -58,7 +58,7 @@ history_file = "conversation_history.json"
 
 # Function to load conversation history from a file
 def load_history():
-    if os.path.exists(history_file):
+    if os.path.exists(history_file) and os.stat(history_file).st_size != 0:
         with open(history_file, 'r',encoding='utf-8') as file:
             history = json.load(file)
             # Keep only the last 100 messages
