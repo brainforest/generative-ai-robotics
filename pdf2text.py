@@ -1,11 +1,17 @@
 import os
+import argparse
 from PyPDF2 import PdfReader
 from gensim.utils import simple_preprocess
 from gensim.models import Word2Vec
 from annoy import AnnoyIndex
 import numpy as np
 from openai import OpenAI
+import warnings
+from colorama import Fore, Style, init 
 
+
+# Initialize colorama
+init(autoreset=True)
 
 # Function to extract text from PDF
 def extract_text_from_pdf(pdf_path):
@@ -64,6 +70,9 @@ def find_similar(text, model, index, chunks, k=1):
 
 # Main execution
 def main(pdf_path):
+    # Your main logic here
+    print(f"Processing PDF file: {pdf_path}")
+
     client = OpenAI()
 
     # Step 1: Extract text from PDF
@@ -94,25 +103,34 @@ def main(pdf_path):
             context += chunks[i] + " "
 
         if (len(context) > 10):
-            print("** context constructed! **")
+            print(Fore.GREEN + "** context constructed! **")
 
-        print("You asked: ", question)
+        print(Fore.YELLOW + "You asked: ", question)
         
         # Formulate the prompt for OpenAI
         prompt = ""
         if len(context) > 10:
-            prompt = f"Based on this context: {context} you are an IT Solution Architect and expert in this area. Please, answer this question: {question}"
+            prompt = f"Based on this context: {context} you are an IT Solution Architect and expert in this area. Please, answer this question shortly : {question}"
         else:
-            prompt = f"You are an IT Solution Architect and expert in this area. Please, answer this question: {question}"
+            prompt = f"You are an IT Solution Architect and expert in this area. Please, answer this question shortly : {question}"
 
         # Send the prompt to OpenAI and get a response
         completion = client.chat.completions.create(
             model="gpt-4o-mini",
-            messages=[ {"role": "user", "content": prompt} ])
-
-        print("OpenAI's response: ", completion.choices[0].message.content)
+            temperature=0.2,
+            messages=[
+               {"role": "user", "content": prompt}
+            ]
+            
+        )
+        text =  completion.choices[0].message.content
+        print(Fore.CYAN + "OpenAI's response: ", Fore.MAGENTA + text)
 
 # Example usage
-pdf_file = "sample.pdf"  # Path to your PDF file
-main(pdf_file)
+if __name__ == "__main__":
+     parser = argparse.ArgumentParser(description="Process a PDF file.")
+     parser.add_argument("pdf_file", help="Path to the PDF file")
+                
+     args = parser.parse_args()
+     main(args.pdf_file)
 
