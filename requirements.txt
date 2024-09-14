@@ -3,10 +3,7 @@ annoy
 colorama
 gensim
 openai
-pixels
 scikit-learn
-RPi.GPIO
-apa102-pi
 networkx
 numpy
 pyaudio
