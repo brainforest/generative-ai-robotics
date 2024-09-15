@@ -13,7 +13,7 @@ speech_file_path = Path(__file__).parent / "speech.mp3"
 response = client.audio.speech.create(
     model="tts-1-hd",
     voice="nova",
-    input="Merhaba, bugün gerçekten muhteşem bir gün, senin sorularına cevap vermeye hazırım!" 
+    input="Haydi, bana bir soru sor! bilim, uzay, matematik veya tarih hakkında merak birşey olabilir." 
 )
 
 # Ses dosyasını dosyaya yazın

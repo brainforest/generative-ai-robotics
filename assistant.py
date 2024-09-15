@@ -19,6 +19,22 @@ import numpy as np
 # alloy, echo, fable, onyx, nova, shimmer
 voice = "nova"
 
+# OpenAI interface
+client = OpenAI()
+
+# To speak louder
+volume_factor = 3.0
+
+# Rastgele seçilecek cümleler listesi
+phrases = [
+    "Haydi, bana bir soru sor! Bilim, uzay, matematik veya tarih hakkında merak ettiğin bir şey olabilir.",
+    "Bugün hangi konuda konuşmak istersin? Teknoloji mi, doğa mı?",
+    "Sana ilginç bir bilgi vereyim mi? Hangi konuda öğrenmek istersin?",
+    "Matematik sorularına hazır mısın? Hadi bir soru sor!",
+    "Uzayda yaşam hakkında ne düşünüyorsun? Merak ettiğin soruları bana sorabilirsin."
+]
+
+
 debug_audio = False
 # Pixel animations during record, speak and think
 pixels = Pixels()
@@ -77,6 +93,29 @@ def add_to_history(role, content):
         conversation_history.pop(0)
     # Save history to file after each addition
     save_history(conversation_history)
+
+
+def text_to_speech(phrase):
+    """Belirtilen metni seslendir ve sesin hacmini artır."""
+    
+    # OpenAI TTS API'si ile ses dosyasını oluştur ve ses akışı başlat
+    stream = p.open(format=8, channels=1, rate=24_000, output=True)
+    
+    with client.audio.speech.with_streaming_response.create(
+        model="tts-1-hd",
+        voice="nova",
+        input=phrase,
+        response_format="pcm"
+    ) as response:
+        # Gelen ses verisini chunk chunk işle
+        for chunk in response.iter_bytes(1024):
+            # PCM verisini numpy dizisine çevir ve sesi yükselt
+            audio_data = np.frombuffer(chunk, dtype=np.int16)
+            audio_data = np.clip(audio_data * volume_factor, -32768, 32767).astype(np.int16)
+            stream.write(audio_data.tobytes())
+    
+    stream.stop_stream()
+    stream.close()
 
 # Listen speaker 
 def _listen():
@@ -172,7 +211,6 @@ def think_and_answer(question):
     button_pressed = False
 
     pixels.think()
-    client = OpenAI()
 
     header = random.choice(question_headers)
 
@@ -192,9 +230,10 @@ def think_and_answer(question):
     print(answer)
 
     pixels.speak()
+    
+    text_to_speech(answer)
 
-    volume_factor = 3.0
-
+    """
     stream = p.open(format=8, channels=1, rate=24_000, output=True)
 
     with client.audio.speech.with_streaming_response.create(
@@ -209,7 +248,7 @@ def think_and_answer(question):
                    audio_data = np.frombuffer(chunk, dtype=np.int16)  # assuming 16-bit PCM
                    audio_data = np.clip(audio_data * volume_factor, -32768, 32767).astype(np.int16)  # Adjust volume safely
                    stream.write(audio_data.tobytes())
-                   
+    """               
     pixels.off()
     time.sleep(1)
 
@@ -241,10 +280,23 @@ _speak("./welcome.mp3")
 button_thread = threading.Thread(target=monitor_button, daemon=True)
 button_thread.start()
 
+counter = 0
+
 # Main loop
 while True:
     if (button_pressed):
         question = _listen()
         if (len(question) > 3):
             answer = think_and_answer(question)
-            time.sleep(0.01)
+            time.sleep(1)
+            counter = 0
+    else:
+        # Eğer 10 saniyede bir metin okunacaksa
+        if counter >= 10:
+            selected_phrase = random.choice(phrases)
+            text_to_speech(selected_phrase)
+            counter = 0
+        else:
+            counter += 1
+
+    time.sleep(1)
