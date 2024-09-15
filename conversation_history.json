@@ -186,5 +186,13 @@
     {
         "role": "assistant",
         "content": "Dinozorlar, büyük bir meteorun dünyaya çarpması ve bunun sonucu oluşan iklim değişikliği nedeniyle yok oldu. Bu olaydan sonra yiyecek bulamadılar ve hayatta kalamadılar."
+    },
+    {
+        "role": "user",
+        "content": "ilkokul seviyesinde kısa cevap ver: 42 / 12"
+    },
+    {
+        "role": "assistant",
+        "content": "42'yi 12'ye böldüğümüzde sonuç 3,5 eder."
     }
 ]
