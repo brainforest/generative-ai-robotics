@@ -16,6 +16,9 @@ import threading
 import random
 import numpy as np
 
+# alloy, echo, fable, onyx, nova, shimmer
+voice = "nova"
+
 debug_audio = False
 # Pixel animations during record, speak and think
 pixels = Pixels()
@@ -40,7 +43,7 @@ TRESHOLD = (RESPEAKER_RATE / CHUNK * SILENCE_DURATION)
 # Initialize PyAudio
 p = pyaudio.PyAudio()
 
-question_headers = ["7 yaşındaki çocuk için eğlenceli ve kısa cevap ver: "] 
+question_headers = ["ilkokul seviyesinde kısa cevap ver: "] 
 
 max_history_length = 100
 # File to store conversation history
@@ -55,7 +58,7 @@ def load_history():
             if len(history) > max_history_length:
                 history = history[-max_history_length:]
             return history
-    return [{"role": "system", "content": "7 yaşındaki çocuk için eğlenceli ve kısa cevap ver: ."}]
+    return [{"role": "system", "content": "ilkokul seviyesinde kısa cevap ver: ."}]
 
 # Initialize the conversation history by loading from file
 conversation_history = load_history()
@@ -190,13 +193,13 @@ def think_and_answer(question):
 
     pixels.speak()
 
-    volume_factor = 2.0
+    volume_factor = 3.0
 
     stream = p.open(format=8, channels=1, rate=24_000, output=True)
 
     with client.audio.speech.with_streaming_response.create(
             model="tts-1",
-            voice="onyx",
+            voice=voice,
             input=answer,
             response_format="pcm") as response:
                for chunk in response.iter_bytes(1024):
@@ -215,7 +218,7 @@ def think_and_answer(question):
 def _speak(speech_file_path):
     pixels.speak()
     # MP3 dosyasını mpg123 ile oynatın
-    volume_factor = 64_000  # Adjust this value to change the volume 
+    volume_factor = 164_000  # Adjust this value to change the volume 
     subprocess.run([ "mpg123", "-f", str(volume_factor), str(speech_file_path) ])
     pixels.off()
 
