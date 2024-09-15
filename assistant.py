@@ -375,10 +375,6 @@ while True:
             counter = 0
     else:
         # Eğer 10 saniyede bir metin okunacaksa
-        if counter == 15:
-            selected_phrase = random.choice(facts)
-            text_to_speech(selected_phrase)
-
         if counter >= 30:
             selected_phrase = random.choice(phrases)
             text_to_speech(selected_phrase)
