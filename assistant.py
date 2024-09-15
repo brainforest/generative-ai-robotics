@@ -14,6 +14,7 @@ import os
 import json
 import threading
 import random
+import numpy as np
 
 debug_audio = False
 # Pixel animations during record, speak and think
@@ -39,7 +40,7 @@ TRESHOLD = (RESPEAKER_RATE / CHUNK * SILENCE_DURATION)
 # Initialize PyAudio
 p = pyaudio.PyAudio()
 
-question_headers = ["7 yaşındaki çocuk için eğlenceli bir cevap ver: "] 
+question_headers = ["7 yaşındaki çocuk için eğlenceli ve kısa cevap ver: "] 
 
 max_history_length = 100
 # File to store conversation history
@@ -54,7 +55,7 @@ def load_history():
             if len(history) > max_history_length:
                 history = history[-max_history_length:]
             return history
-    return [{"role": "system", "content": "7 yaşındaki çocuk için eğlenceli bir şekilde kısa cevap ver: ."}]
+    return [{"role": "system", "content": "7 yaşındaki çocuk için eğlenceli ve kısa cevap ver: ."}]
 
 # Initialize the conversation history by loading from file
 conversation_history = load_history()
@@ -189,6 +190,8 @@ def think_and_answer(question):
 
     pixels.speak()
 
+    volume_factor = 2.0
+
     stream = p.open(format=8, channels=1, rate=24_000, output=True)
 
     with client.audio.speech.with_streaming_response.create(
@@ -199,9 +202,11 @@ def think_and_answer(question):
                for chunk in response.iter_bytes(1024):
                    if (button_pressed):
                        break
-                   stream.write(chunk)
-
-
+                   # Convert the chunk into a numpy array and adjust the volume
+                   audio_data = np.frombuffer(chunk, dtype=np.int16)  # assuming 16-bit PCM
+                   audio_data = np.clip(audio_data * volume_factor, -32768, 32767).astype(np.int16)  # Adjust volume safely
+                   stream.write(audio_data.tobytes())
+                   
     pixels.off()
     time.sleep(1)
 
@@ -210,7 +215,8 @@ def think_and_answer(question):
 def _speak(speech_file_path):
     pixels.speak()
     # MP3 dosyasını mpg123 ile oynatın
-    subprocess.run([ "mpg123", str(speech_file_path) ])
+    volume_factor = 64_000  # Adjust this value to change the volume 
+    subprocess.run([ "mpg123", "-f", str(volume_factor), str(speech_file_path) ])
     pixels.off()
 
 def monitor_button():
