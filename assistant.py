@@ -97,7 +97,9 @@ def add_to_history(role, content):
 
 def text_to_speech(phrase):
     """Belirtilen metni seslendir ve sesin hacmini artır."""
-    
+   
+    pixels.speak()
+
     # OpenAI TTS API'si ile ses dosyasını oluştur ve ses akışı başlat
     stream = p.open(format=8, channels=1, rate=24_000, output=True)
     
@@ -116,6 +118,8 @@ def text_to_speech(phrase):
     
     stream.stop_stream()
     stream.close()
+
+    pixels.off()
 
 # Listen speaker 
 def _listen():
@@ -228,28 +232,7 @@ def think_and_answer(question):
     add_to_history("assistant", answer)
 
     print(answer)
-
-    pixels.speak()
-    
     text_to_speech(answer)
-
-    """
-    stream = p.open(format=8, channels=1, rate=24_000, output=True)
-
-    with client.audio.speech.with_streaming_response.create(
-            model="tts-1",
-            voice=voice,
-            input=answer,
-            response_format="pcm") as response:
-               for chunk in response.iter_bytes(1024):
-                   if (button_pressed):
-                       break
-                   # Convert the chunk into a numpy array and adjust the volume
-                   audio_data = np.frombuffer(chunk, dtype=np.int16)  # assuming 16-bit PCM
-                   audio_data = np.clip(audio_data * volume_factor, -32768, 32767).astype(np.int16)  # Adjust volume safely
-                   stream.write(audio_data.tobytes())
-    """               
-    pixels.off()
     time.sleep(1)
 
     return " "
