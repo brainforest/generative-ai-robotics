@@ -114,11 +114,11 @@ facts = [
     "Bir kuasar, evrendeki en parlak nesnelerden biridir."
 ]
 
-def convert_percentage_to_turkish(text):
-    """Convert percentages like %3.5 or %90 to their Turkish equivalents."""
+def convert_numbers_to_words(text):
+    """Convert percentages like 3.5 or 90 to their Turkish equivalents."""
     
     # Regular expression to find percentages like %3.5 or %90
-    percentage_pattern = re.compile(r'%(\d+(\.\d+)?)')
+    percentage_pattern = re.compile(r'(\d+(\.\d+)?)')
     
     def replace_with_words(match):
         number = match.group(1)
@@ -128,10 +128,10 @@ def convert_percentage_to_turkish(text):
             parts = number.split('.')
             integer_part = num2words(int(parts[0]), lang='tr')
             decimal_part = num2words(int(parts[1]), lang='tr')
-            return f"% {integer_part} virgül {decimal_part}"
+            return f"{integer_part} virgül {decimal_part}"
         else:
             # Handle whole numbers
-            return f"% {num2words(int(number), lang='tr')}"
+            return f"{num2words(int(number), lang='tr')}"
     
     # Replace all percentages in the text with their Turkish equivalents
     return percentage_pattern.sub(replace_with_words, text)
@@ -214,7 +214,7 @@ while True:
     selected_phrase = random.choice(facts)
 
     # do some changes
-    selected_phrase = convert_percentage_to_turkish(selected_phrase)
+    selected_phrase = convert_numbers_to_words(selected_phrase)
     print(f"Seçilen cümle: {selected_phrase}")
 
     # Metni seslendir
