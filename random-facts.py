@@ -12,7 +12,7 @@ from num2words import num2words
 client = OpenAI()
 
 # Ses parametreleri
-volume_factor = 1.0
+volume_factor = 3.0
 p = pyaudio.PyAudio()
 
 # Rastgele seçilecek cümleler listesi
@@ -137,6 +137,30 @@ def convert_numbers_to_words(text):
     return percentage_pattern.sub(replace_with_words, text)
 
 
+def adjust_volume(audio_data, volume_factor,sample_width) :
+
+    """Adjusts the volume of PCM audio data.
+
+    Args:
+        audio_data (bytes): Raw PCM audio data.
+        volume_factor (float): Factor by which to increase the volume.
+        sample_width (int): The width of each sample in bytes.
+
+    Returns:
+        bytes: Adjusted PCM audio data.
+    """
+    # Convert binary data to numpy array for processing
+    dtype = np.int16 if sample_width == 2 else np.int8
+    audio_array = np.frombuffer(audio_data, dtype=dtype)
+
+    # Apply volume adjustment
+    audio_array = np.clip(audio_array * volume_factor, -32768, 32767)
+
+    # Convert numpy array back to binary data
+    adjusted_audio_data = audio_array.astype(np.int16).tobytes()
+
+    return adjusted_audio_data
+
 def play_audio_in_chunks():
     """Plays raw PCM audio from a file in chunks using PyAudio stream."""
 
@@ -160,7 +184,7 @@ def play_audio_in_chunks():
 
         while len(audio_data) > 0:
             # Play the chunk of PCM data
-            stream.write(audio_data)
+            stream.write(adjust_volume(audio_data, volume_factor, sample_width))
             # Read the next chunk
             audio_data = pcm_file.read(chunk_size)
 
