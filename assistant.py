@@ -117,7 +117,7 @@ def text_to_speech(phrase):
     pixels.speak()
 
     # OpenAI TTS API'si ile ses dosyasını oluştur ve ses akışı başlat
-    stream = p.open(format=8, channels=1, rate=24_000, output=True)
+    stream = p.open(format=8, channels=1, rate=24_000, output=True,output_device_index=RESPEAKER_INDEX)
     
     with client.audio.speech.with_streaming_response.create(
         model="tts-1-hd",
