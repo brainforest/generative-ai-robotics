@@ -3,7 +3,7 @@ from gensim.utils import simple_preprocess
 from annoy import AnnoyIndex
 import numpy as np
 
-# Sample facts 
+# Sample information 
 
 texts = [
     "Microservices are an architectural style where an application is developed as a collection of loosely coupled, independently deployable services.",
