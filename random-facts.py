@@ -8,6 +8,9 @@ from io import BytesIO
 import re
 from num2words import num2words
 
+# Replace this with the correct device index for hw:1,0 from the previous step
+device_index = 1  # Example index, replace with the actual index
+
 # OpenAI istemcisi
 client = OpenAI()
 
@@ -175,7 +178,8 @@ def play_audio_in_chunks():
     stream = p.open(format=p.get_format_from_width(sample_width),
                     channels=channels,
                     rate=sample_rate,
-                    output=True)
+                    output=True,
+                    output_device_index=device_index)
 
     # Read the PCM file in binary mode and play it in chunks
     chunk_size = 4096  # Adjust chunk size if needed
@@ -217,7 +221,7 @@ def text_to_speech(phrase):
     """Belirtilen metni seslendir ve sesin hacmini artır."""
 
     # OpenAI TTS API'si ile ses dosyasını oluştur ve ses akışı başlat
-    stream = p.open(format=8, channels=1, rate=24_000, output=True)
+    stream = p.open(format=8, channels=1, rate=24_000, output=True,output_device_index=device_index)
 
     with client.audio.speech.with_streaming_response.create(
         model="tts-1",
