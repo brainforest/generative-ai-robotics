@@ -168,7 +168,7 @@ def main(pdf_path):
 
         # Perform similarity search based on the user's question
         query_text = question 
-        nearest_neighbors = find_similar(query_text)
+        nearest_neighbors = find_similar(query_text,model,index)
 
         context = ""
         for i in nearest_neighbors:
