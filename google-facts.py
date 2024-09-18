@@ -5,6 +5,7 @@ from google.cloud import texttospeech
 from google.oauth2 import service_account
 from scientific_facts import facts
 
+
 # Example index, replace with the actual index
 device_index = 1 
 
