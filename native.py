@@ -6,6 +6,8 @@ import pyaudio
 recognizer = sr.Recognizer()
 client = openai.OpenAI()
 
+voice="nova"
+
 # Set the recording and audio playback parameters
 SAMPLE_RATE = 16000  # Valid argument for Microphone
 CHUNK = 1024
@@ -64,7 +66,7 @@ def listen_and_speak():
                 # Create a TTS request and stream the response
                 with client.audio.speech.with_streaming_response.create(
                         model="tts-1",
-                        voice="onyx",
+                        voice=voice,
                         input=gpt_response,
                         response_format="pcm") as tts_response:
 
