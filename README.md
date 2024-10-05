@@ -9,8 +9,6 @@ Simple Raspberry Pi Zero + SeedStudio Respeaker 2 Microphone HAT based Generativ
 
 How to install drivers for Respeaker 2 refer to  !(https://github.com/respeaker/seeed-voicecard)
 
-https://github.com/user-attachments/assets/ccfdb7f3-eda3-41af-9a13-176b316ec82c
-
  
 
  
